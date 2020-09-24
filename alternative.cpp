@@ -21,19 +21,19 @@ int main() {
         int rowindex = i / 80;
         int colindex = i % 80;
         if (2 * rowindex == colindex) {
-            output[i] = 'E';
+            //output[i] = 'E';
         }
         if (80 - (2 * rowindex) == colindex || colindex == 79 && rowindex == 0) {
-            output[i] = 'V';
+            //output[i] = 'V';
         }
         if (rowindex == 30) {
-            output[i] = 'P';
+            //output[i] = 'P';
         }
         bool line_intersection_one = 2 * rowindex == 80 - (2*rowindex) && colindex == 2*rowindex;
         bool line_intersection_two = (80 - colindex) / 2 == 30 && rowindex == 30;
         bool line_intersection_three = colindex / 2 == 30 && rowindex == 30;
         if (line_intersection_one || line_intersection_two || line_intersection_three) {
-            output[i] = 'B';
+            //output[i] = 'B';
             if (line_intersection_one) {
                 intersection_one = i / 80;
             }
@@ -47,8 +47,12 @@ int main() {
     }
     for (int i = 0; i < 3200; i++) {
         int rowindex = i / 80;
-        bool draw_condition = rowindex > intersection_one && rowindex < intersection_two;
-        if (draw_condition) {
+        int colindex = i % 80;
+        bool draw_y_condition = rowindex > intersection_one && rowindex < intersection_two;
+        bool draw_x_condition = colindex > 80 - 2*rowindex && colindex < 2*rowindex;
+        bool draw_y_border = rowindex == intersection_one && rowindex == intersection_two;
+        bool draw_x_border = colindex == 80 - 2 * rowindex && colindex == 2*rowindex;
+        if (draw_y_condition && draw_x_condition || draw_y_border && draw_x_border) {
             output[i] = 'G';
         }
     }
