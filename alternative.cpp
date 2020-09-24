@@ -5,6 +5,9 @@
 #include <unistd.h>
 using namespace std;
 
+int circmath(int ycoordinate, int xcoordinate, int xdisplacement, int ydisplacement) {
+    return pow((xcoordinate - xdisplacement), 2) + pow((2*ycoordinate - ydisplacement), 2);
+}
 
 int main() {
     printf("\x1b[2J");
@@ -13,24 +16,39 @@ int main() {
     for (int i = 0; i < 3200; i++) {
         output[i] = '.';
     }
-
+    int intersection_one, intersection_two, intersection_three = 0;
     for (int i = 0; i < 3200; i++) {
         int rowindex = i / 80;
         int colindex = i % 80;
-        int circmath = pow((colindex - 40),2) + pow((2*rowindex - 20),2);
-        int circmath2 = pow((colindex - 30),2) + pow((2*rowindex - 60),2);
-        output[79] = 'Y';
-       
-        output[81] = 'Y';
-        output[80 * 39 + 1] = 'Y';
-        output[3199] = 'Y';
-        if (circmath < 49 || circmath == 49) {
-            output[i] = 'B';
-        }
         if (2 * rowindex == colindex) {
             output[i] = 'E';
         }
-        if (circmath2 < 81 || circmath2 == 81) {
+        if (80 - (2 * rowindex) == colindex || colindex == 79 && rowindex == 0) {
+            output[i] = 'V';
+        }
+        if (rowindex == 30) {
+            output[i] = 'P';
+        }
+        bool line_intersection_one = 2 * rowindex == 80 - (2*rowindex) && colindex == 2*rowindex;
+        bool line_intersection_two = (80 - colindex) / 2 == 30 && rowindex == 30;
+        bool line_intersection_three = colindex / 2 == 30 && rowindex == 30;
+        if (line_intersection_one || line_intersection_two || line_intersection_three) {
+            output[i] = 'B';
+            if (line_intersection_one) {
+                intersection_one = i / 80;
+            }
+            else if (line_intersection_two) {
+                intersection_two = i / 80;
+            }
+            else if (line_intersection_three) {
+                intersection_three = i / 80;
+            }
+        }
+    }
+    for (int i = 0; i < 3200; i++) {
+        int rowindex = i / 80;
+        bool draw_condition = rowindex > intersection_one && rowindex < intersection_two;
+        if (draw_condition) {
             output[i] = 'G';
         }
     }
